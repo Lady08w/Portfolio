@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tatiana Roncancio — Marketing 360°</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dark: #0A0A12;
+    --white: #FFFFFF;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 3rem;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(196,181,244,0.15);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; color: var(--dark); }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a { font-size: 0.82rem; font-weight: 500; color: var(--dark); text-decoration: none; letter-spacing: 0.5px; opacity: 0.6; transition: opacity 0.2s; }
+  .nav-links a:hover { opacity: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    position: relative; overflow: hidden;
+    background: #fff;
+    display: flex; align-items: flex-end;
+    padding: 0 3rem 3.5rem;
+  }
+
+  /* Canvas for entropic blob */
+  #heroCanvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  .hero-title {
+    position: relative; z-index: 2;
+    pointer-events: none;
+  }
+  .hero-title h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    line-height: 0.9;
+    color: var(--dark);
+    letter-spacing: -1px;
+  }
+  .hero-title .sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    letter-spacing: 6px;
+    color: rgba(10,10,18,0.4);
+    margin-top: 0.3rem;
+  }
+
+  /* ── ABOUT ── */
+  #sobre-mi {
+    padding: 7rem 3rem;
+    position: relative; overflow: hidden;
+    background: var(--white);
+  }
+  .about-canvas-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    z-index: 0; opacity: 0.7;
+  }
+  .about-inner {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto;
+  }
+  .section-label {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 4px;
+    text-transform: uppercase; color: #9080C0; margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1; color: var(--dark); margin-bottom: 2.5rem;
+  }
+  .about-card {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 24px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 8px 40px rgba(160,140,220,0.1), inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .about-card p { font-size: 1rem; line-height: 1.85; color: rgba(10,10,18,0.8); }
+  .about-skills {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1rem; margin-top: 1.5rem;
+  }
+  .skill-pill {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(196,181,244,0.35);
+    border-radius: 14px; padding: 0.9rem 1.2rem;
+  }
+  .skill-pill .skill-cat { font-size: 0.68rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #9080C0; margin-bottom: 0.4rem; }
+  .skill-pill .skill-items { font-size: 0.8rem; color: rgba(10,10,18,0.65); line-height: 1.5; }
+
+  /* ── PROJECTS ── */
+  #proyectos { padding: 7rem 3rem; background: var(--white); }
+  .projects-header { max-width: 900px; margin: 0 auto 4rem; }
+  .projects-grid { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 3rem; }
+  .project-card {
+    border: 1px solid rgba(196,181,244,0.25); border-radius: 28px; overflow: hidden;
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(160,140,220,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 50px rgba(160,140,220,0.16); }
+  .project-header {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid rgba(196,181,244,0.2);
+    display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;
+  }
+  .project-type { font-size: 0.7rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #9080C0; margin-bottom: 0.5rem; }
+  .project-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; line-height: 1; color: var(--dark); }
+  .project-meta { font-size: 0.78rem; color: rgba(10,10,18,0.45); font-weight: 500; text-align: right; }
+  .project-body { padding: 2rem 2.5rem; }
+  .project-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .ps-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #9080C0; margin-bottom: 0.5rem; }
+  .ps-text { font-size: 0.88rem; line-height: 1.65; color: rgba(10,10,18,0.7); }
+  .project-results {
+    display: flex; flex-wrap: wrap; gap: 0.8rem;
+    padding-top: 1.5rem; border-top: 1px solid rgba(196,181,244,0.2);
+  }
+  .result-chip {
+    display: flex; flex-direction: column;
+    background: linear-gradient(135deg, rgba(196,181,244,0.2), rgba(168,200,240,0.15));
+    border: 1px solid rgba(196,181,244,0.3);
+    border-radius: 14px; padding: 0.7rem 1.1rem;
+  }
+  .result-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; line-height: 1;
+    background: linear-gradient(135deg, #8060D0, #6090D0);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .result-label { font-size: 0.7rem; color: rgba(10,10,18,0.5); margin-top: 0.2rem; }
+
+  /* ── CONTACT ── */
+  #contacto { padding: 7rem 3rem; text-align: center; position: relative; overflow: hidden; }
+  .contact-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25; pointer-events: none; }
+  .contact-blob-1 { width: 500px; height: 400px; top: -100px; left: 50%; transform: translateX(-50%); background: radial-gradient(ellipse, #d8c8ff, #b8d8f8, #f8c8e8); }
+  .contact-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+  .contact-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 6rem); line-height: 0.95; color: var(--dark); margin-bottom: 1rem; }
+  .contact-sub { font-size: 1rem; color: rgba(10,10,18,0.55); margin-bottom: 2.5rem; line-height: 1.7; }
+  .contact-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
+    padding: 0.8rem 1.6rem; border-radius: 100px; text-decoration: none; transition: all 0.25s ease;
+  }
+  .contact-link.primary { background: linear-gradient(135deg, #8060D0, #6090D0); color: white; box-shadow: 0 4px 20px rgba(128,96,208,0.3); }
+  .contact-link.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(128,96,208,0.4); }
+  .contact-link.secondary { border: 1.5px solid rgba(196,181,244,0.5); color: #7060B0; background: rgba(196,181,244,0.08); }
+  .contact-link.secondary:hover { background: rgba(196,181,244,0.18); }
+
+  footer { text-align: center; padding: 2rem; font-size: 0.75rem; color: rgba(10,10,18,0.3); border-top: 1px solid rgba(196,181,244,0.15); }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 600px) {
+    .project-sections { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero, #sobre-mi, #proyectos, #contacto { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .about-card { padding: 1.5rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  /* ══════════ MOBILE OPTIMIZATION ══════════ */
+  @media (max-width: 780px) {
+    nav { padding: 0.9rem 1.2rem; }
+    .nav-logo { font-size: 1.15rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.72rem; }
+
+    .hero { padding: 0 1.2rem 2rem; min-height: 92vh; align-items: flex-end; }
+    .hero-title h1 { font-size: clamp(2.6rem, 13vw, 4.2rem); }
+    .hero-title .sub { font-size: clamp(0.9rem, 4vw, 1.2rem); letter-spacing: 3px; }
+
+    .section-label { font-size: 0.68rem; letter-spacing: 2.5px; }
+    .section-title { font-size: clamp(2rem, 9vw, 3rem); margin-bottom: 1.5rem; }
+
+    #sobre-mi { padding: 4rem 1.2rem; }
+    .about-card { padding: 1.4rem 1.3rem; border-radius: 18px; }
+    .about-card p { font-size: 0.92rem; line-height: 1.7; }
+    .about-skills { grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 1.2rem; }
+    .skill-pill { padding: 0.7rem 0.9rem; border-radius: 12px; }
+    .skill-pill .skill-items { font-size: 0.74rem; }
+
+    #proyectos { padding: 4rem 0; }
+    .projects-header { padding: 0 1.2rem !important; margin-bottom: 2.2rem !important; }
+    .projects-grid { padding: 0 1.2rem !important; gap: 2.2rem !important; }
+
+    .project-card[style*="grid-template-columns:1fr 1fr"],
+    .project-card[style*="grid-template-columns:1.1fr 0.9fr"] {
+      display: flex !important;
+      flex-direction: column !important;
+      min-height: 0 !important;
+    }
+
+    .project-card > div[style*="position:relative"] {
+      min-height: 240px !important;
+      height: 260px !important;
+      order: -1;
+    }
+
+    .project-card > div[style*="padding:2.5rem"] {
+      padding: 1.5rem !important;
+    }
+
+    .project-title { font-size: 1.6rem; }
+    .project-type { font-size: 0.64rem; letter-spacing: 2px; }
+
+    .project-card div[style*="display:flex; gap:0.7rem"] {
+      flex-wrap: wrap !important;
+    }
+    .result-chip { flex: 1 1 46% !important; min-width: 130px; }
+    .result-num { font-size: 1.3rem; }
+    .result-label { font-size: 0.64rem; }
+
+    .project-card div[style*="grid-template-columns:1fr 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    .project-card div[style*="grid-template-columns:1fr 1fr 1fr"] > div {
+      border-right: none !important;
+      border-bottom: 1px solid rgba(196,181,244,0.2);
+    }
+    .project-card div[style*="grid-template-columns:1fr 1fr 1fr"] > div:last-child {
+      border-bottom: none;
+    }
+
+    .project-card div[style*="padding:2rem 2.5rem"] {
+      padding: 1.3rem 1.5rem !important;
+    }
+
+    .project-card span[style*="border-radius:100px"] {
+      font-size: 0.64rem !important;
+      padding: 0.25rem 0.65rem !important;
+    }
+
+    .catalog-videos { grid-template-columns: 1fr !important; padding: 0 1.5rem 1.5rem !important; }
+    .project-card[style*="grid-template-columns:1.15fr 0.85fr"] { display: flex !important; flex-direction: column !important; min-height: 0 !important; }
+    #contacto { padding: 4.5rem 1.2rem; }
+    .contact-title { font-size: clamp(2.4rem, 12vw, 3.6rem); }
+    .contact-sub { font-size: 0.9rem; }
+    .contact-links { flex-direction: column; align-items: center; }
+    .contact-link { font-size: 0.78rem; padding: 0.7rem 1.3rem; width: 100%; text-align: center; justify-content: center; }
+
+    footer { padding: 1.4rem; font-size: 0.68rem; }
+  }
+
+  @media (max-width: 380px) {
+    .about-skills { grid-template-columns: 1fr; }
+    .result-chip { flex: 1 1 100% !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">TR</div>
+  <div class="nav-links">
+    <a href="#sobre-mi">About</a>
+    <a href="#proyectos">Work</a>
+    <a href="#contacto">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-title">
+    <h1>TATIANA<br>RONCANCIO</h1>
+    <p class="sub">MARKETING 360°</p>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section id="sobre-mi">
+  <canvas class="about-canvas-bg" id="aboutCanvas"></canvas>
+  <div class="about-inner">
+    <p class="section-label reveal">About</p>
+    <h2 class="section-title reveal">WHO I AM</h2>
+    <div class="about-card reveal">
+      <p>I am a marketing and communications professional with over 5 years of experience in B2B and B2C environments. I specialize in creating end-to-end 360° campaigns and events: from strategy definition and KPIs to the management of graphic pieces, print, merch, logistics and agencies; communication during the event or campaign, metrics review, and final results analysis.</p>
+      <br>
+      <p>My experience across diverse environments — retail, manufacturing, culture, and small businesses — has given me a broad understanding of brand identity and how to adapt it to very different contexts. I am structured, results-driven, and have a strong creative sensibility, which allows me to create fresh, engaging campaigns focused on achieving results. I work with the Adobe design and editing ecosystem, and use generative AI to produce high-quality visual content. I am a native Spanish speaker, with intermediate French and English.</p>
+    </div>
+    <div class="about-skills reveal">
+      <div class="skill-pill">
+        <div class="skill-cat">Design & Editing</div>
+        <div class="skill-items">Adobe Ps · Ai · Ae · Premiere · Canva · CapCut · Blender</div>
+      </div>
+      <div class="skill-pill">
+        <div class="skill-cat">Generative AI</div>
+        <div class="skill-items">Midjourney · Gemini · Magnific · Runway</div>
+      </div>
+      <div class="skill-pill">
+        <div class="skill-cat">Analytics</div>
+        <div class="skill-items">Google Analytics · Meta Ads · Looker · Tableau · Excel</div>
+      </div>
+      <div class="skill-pill">
+        <div class="skill-cat">Languages</div>
+        <div class="skill-items">Spanish (native) · English B1 · French B1</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<section id="proyectos">
+  <div class="projects-header" style="max-width:1100px; margin:0 auto 4rem; padding:0 3rem;">
+    <p class="section-label reveal">Work</p>
+    <h2 class="section-title reveal">SELECTED WORK</h2>
+  </div>
+
+  <div class="projects-grid" style="max-width:1100px; margin:0 auto; padding:0 3rem; display:flex; flex-direction:column; gap:4rem;">
+
+    <!-- CATÁLOGOS DIGITALES — info arriba, dos videos -->
+    <div class="project-card reveal" style="border-radius:28px; overflow:hidden;">
+      <div style="padding:2.5rem; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1.5rem;">
+        <div style="max-width:560px;">
+          <p class="project-type">Digital Catalogs · Web · E-commerce</p>
+          <h3 class="project-title" style="margin-bottom:1.5rem;">DIGITAL CATALOGS</h3>
+          <p style="font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#9080C0; margin-bottom:0.4rem;">Bianka &amp; Dru · Streetwear store</p>
+          <p style="font-size:0.88rem; line-height:1.7; color:rgba(10,10,18,0.7);">Mobile-first digital catalogs that replace the classic PDF: products organized by category, with prices, sizes and colors, search, and a direct WhatsApp purchase button on every item — so customers go from browsing to buying in one tap.</p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; max-width:300px;">
+          <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Mobile-first</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">UX/UI</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">WhatsApp Commerce</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Product Filters</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Web Design</span>
+        </div>
+      </div>
+      <div class="catalog-videos" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; padding:0 2.5rem 2.5rem;">
+        <div style="border-radius:18px; overflow:hidden; background:#000; aspect-ratio:4/3;">
+          <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;" aria-label="Streetwear store digital catalog" poster="assets/01.jpg">
+            <source src="assets/02.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div style="border-radius:18px; overflow:hidden; background:#000; aspect-ratio:4/3;">
+          <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;" aria-label="Bianka &amp; Dru digital catalog" poster="assets/03.jpg">
+            <source src="assets/04.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREACIÓN DE CONTENIDO — video izquierda, info derecha -->
+    <div class="project-card reveal" style="display:grid; grid-template-columns:1.15fr 0.85fr; border-radius:28px; overflow:hidden; min-height:480px;">
+      <div style="position:relative; background:#000; min-height:420px; display:flex; align-items:center; justify-content:center;">
+        <video autoplay muted loop playsinline controls style="width:100%; height:100%; object-fit:cover; display:block; position:absolute; inset:0;" aria-label="Bianka &amp; Dru content reel" poster="assets/05.jpg">
+          <source src="assets/06.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div style="padding:2.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <p class="project-type">Content Creation · Social Media</p>
+          <h3 class="project-title" style="margin-bottom:1.5rem;">CONTENT CREATION</h3>
+          <p style="font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#9080C0; margin-bottom:0.4rem;">Bianka &amp; Dru</p>
+          <p style="font-size:0.88rem; line-height:1.7; color:rgba(10,10,18,0.7); margin-bottom:1.2rem;">Short-form video for the brand's social channels: outfit ideas, styling reels and product close-ups. From concept and art direction to shooting, editing and on-screen copy.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Reels</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">TikTok</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Styling</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Video Editing</span><span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Art Direction</span>
+          </div>
+        </div>
+        <div style="font-size:0.8rem; color:rgba(10,10,18,0.45); line-height:1.6; margin-top:1.5rem;">
+          Concept · Shooting · Editing · Copy
+        </div>
+      </div>
+    </div>
+
+    <!-- LATINO GRAFF — video izquierda, info derecha -->
+    <div class="project-card reveal" style="display:grid; grid-template-columns:1fr 1fr; border-radius:28px; overflow:hidden; min-height:480px;">
+      <div style="position:relative; background:#000; min-height:520px; display:flex; align-items:center; justify-content:center;">
+        <video controls playsinline loop style="width:100%; height:100%; object-fit:contain; display:block; position:absolute; inset:0;">
+          <source src="assets/07.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div style="padding:2.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <p class="project-type">Cultural Communications · Volunteer</p>
+          <h3 class="project-title" style="margin-bottom:1.5rem;">LATINO GRAFF</h3>
+          <p style="font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#9080C0; margin-bottom:0.4rem;">Toulouse, France · Sep 2024 – Mar 2025</p>
+          <p style="font-size:0.88rem; line-height:1.7; color:rgba(10,10,18,0.7); margin-bottom:1.2rem;">International Latin urban art festival. I designed and executed the full communication campaign: anticipation, consideration with artists, and post-event recap. Bilingual copy in Spanish/French.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem;">
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Reels</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Carousels</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">360° Strategy</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Copy ES/FR</span>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem;">
+          <div class="result-chip"><span class="result-num">6.850</span><span class="result-label">People reached</span></div>
+          <div class="result-chip"><span class="result-num">75%</span><span class="result-label">Non-followers</span></div>
+          <div class="result-chip"><span class="result-num">2,43%</span><span class="result-label">Engagement rate</span></div>
+          <div class="result-chip"><span class="result-num">+30%</span><span class="result-label">Above average</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MECÁNICO GOLEADOR — info izquierda, imagen derecha -->
+    <div class="project-card reveal" style="display:grid; grid-template-columns:1fr 1fr; border-radius:28px; overflow:hidden; min-height:480px;">
+      <div style="padding:2.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <p class="project-type">Trade Marketing · B2B Campaign</p>
+          <h3 class="project-title" style="margin-bottom:1.5rem;">MECÁNICO GOLEADOR</h3>
+          <p style="font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#9080C0; margin-bottom:0.4rem;">Grupo A Autopartes · 2024 – 2025</p>
+          <p style="font-size:0.88rem; line-height:1.7; color:rgba(10,10,18,0.7); margin-bottom:1.2rem;">B2B campaign to recover market share by incentivizing mechanics for product installation. I analyzed average ticket, designed the mechanics, and managed print, logistics, and coordination with the sales team.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem;">
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Trade Marketing</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">POP Material</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">B2B</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Logistics</span>
+          </div>
+          <p style="font-size:0.75rem; color:rgba(10,10,18,0.4); margin-bottom:1rem;">Monthly budget managed: COP $52M</p>
+        </div>
+        <div style="display:flex; gap:0.7rem;">
+          <div class="result-chip" style="flex:1;"><span class="result-num">+10%</span><span class="result-label">Market share growth</span></div>
+        </div>
+      </div>
+      <div style="position:relative; min-height:480px; background:#f8f6ff; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <img src="assets/08.png" alt="Mecánico Goleador flyer" style="width:100%; height:100%; object-fit:contain; display:block; position:absolute; inset:0;">
+      </div>
+    </div>
+
+    <!-- CONCURSO ELECTRODOMÉSTICOS — KV protagonista + cuadrícula -->
+    <div class="project-card reveal" style="border-radius:28px; overflow:hidden;">
+      <div style="display:grid; grid-template-columns:1.1fr 0.9fr; min-height:520px;">
+        <div style="padding:2.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <p class="project-type">Trade Marketing · CRM · Conversion</p>
+            <h3 class="project-title" style="margin-bottom:1.5rem;">CONCURSO DE ELECTRODOMÉSTICOS</h3>
+            <p style="font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#9080C0; margin-bottom:0.4rem;">Grupo A Autopartes · Ruta Mundialista · 2024 – 2025</p>
+            <p style="font-size:0.88rem; line-height:1.7; color:rgba(10,10,18,0.7); margin-bottom:1.2rem;">Conversion campaign for B2B distributors with a contest mechanic: sales reps were segmented into groups based on their average sales, with individual targets and prizes for those with the highest over-achievement. I managed the database, direct communication via WhatsApp, the measurement dashboard in Looker, and the logistics coordination of prizes.</p>
+            <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+              <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">CRM</span>
+              <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Looker</span>
+              <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Mass WhatsApp</span>
+              <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Segmentation</span>
+              <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Logistics</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <div class="result-chip" style="display:inline-flex;"><span class="result-num">+12%</span><span class="result-label">Sell-out growth</span></div>
+          </div>
+        </div>
+        <!-- KV protagonista -->
+        <div style="position:relative; background:#0a0a14; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <img src="assets/09.jpg" alt="Key Visual — Ruta Mundialista prizes" style="width:100%; height:100%; object-fit:contain; object-position:center; display:block; position:absolute; inset:0;">
+        </div>
+      </div>
+      <!-- Cuadrícula de evidencias -->
+      <div style="border-top:1px solid rgba(196,181,244,0.2); padding:2rem 2.5rem;">
+        <p class="ps-label" style="margin-bottom:1.2rem;">Process & results</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+          <div>
+            <div style="border-radius:14px; overflow:hidden; background:#fff; border:1px solid rgba(196,181,244,0.25); height:200px; display:flex; align-items:center; justify-content:center;">
+              <img src="assets/10.png" alt="Looker measurement dashboard" style="width:100%; height:100%; object-fit:contain; display:block;">
+            </div>
+            <p style="font-size:0.72rem; color:rgba(10,10,18,0.5); margin-top:0.5rem;">Measurement dashboard in Looker</p>
+          </div>
+          <div>
+            <div style="border-radius:14px; overflow:hidden; background:#fff; border:1px solid rgba(196,181,244,0.25); height:200px; display:flex; align-items:center; justify-content:center;">
+              <img src="assets/11.png" alt="CRM communication via WhatsApp" style="width:100%; height:100%; object-fit:contain; display:block;">
+            </div>
+            <p style="font-size:0.72rem; color:rgba(10,10,18,0.5); margin-top:0.5rem;">Personalized CRM communication via WhatsApp</p>
+          </div>
+          <div>
+            <div style="border-radius:14px; overflow:hidden; background:#fff; border:1px solid rgba(196,181,244,0.25); height:200px; display:flex; align-items:center; justify-content:center;">
+              <img src="assets/12.jpg" alt="Prize delivery" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <p style="font-size:0.72rem; color:rgba(10,10,18,0.5); margin-top:0.5rem;">Prize delivery to winners</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOKR — info izquierda, imagen email derecha -->
+    <div class="project-card reveal" style="display:grid; grid-template-columns:1fr 1fr; border-radius:28px; overflow:hidden; min-height:480px;">
+      <div style="padding:2.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <p class="project-type">Digital Marketing · 360° Campaigns</p>
+          <h3 class="project-title" style="margin-bottom:1.5rem;">JOKR COLOMBIA</h3>
+          <p style="font-size:0.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#9080C0; margin-bottom:0.4rem;">Jokr Colombia · Sep 2022 – Feb 2023</p>
+          <p style="font-size:0.88rem; line-height:1.7; color:rgba(10,10,18,0.7); margin-bottom:1.2rem;">Fast-delivery startup with 8 simultaneous consumer brands. I created monthly 360° campaigns per brand: email marketing, social content, sponsored stories, and editorial calendars, with visual results reports for each.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem;">
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Email Marketing</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">8 Brands</span>
+            <span style="font-size:0.7rem; padding:0.3rem 0.8rem; border-radius:100px; background:rgba(196,181,244,0.15); border:1px solid rgba(196,181,244,0.3); color:#7060B0;">Reports</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:0.7rem;">
+          <div class="result-chip" style="flex:1;"><span class="result-num">41.109</span><span class="result-label">Emails sent</span></div>
+          <div class="result-chip" style="flex:1;"><span class="result-num">26,41%</span><span class="result-label">Open rate</span></div>
+          <div class="result-chip" style="flex:1;"><span class="result-num">8</span><span class="result-label">Simultaneous brands</span></div>
+        </div>
+      </div>
+      <div style="position:relative; min-height:480px; background:#0d3b66; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <img src="assets/13.png" alt="Drink Friday email — Jokr metrics" style="width:100%; height:100%; object-fit:contain; display:block; position:absolute; inset:0;">
+      </div>
+    </div>
+
+      </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contact-blob contact-blob-1"></div>
+  <div class="contact-inner">
+    <p class="section-label reveal">Let’s work together</p>
+    <h2 class="contact-title reveal">GET IN TOUCH</h2>
+    <p class="contact-sub reveal">If you have a project, a campaign, or an idea that needs strategy and execution, get in touch.</p>
+    <div class="contact-links reveal">
+      <a href="mailto:ladytatianaroncancio@gmail.com" class="contact-link primary">ladytatianaroncancio@gmail.com</a>
+      <a href="https://instagram.com/lady08" target="_blank" class="contact-link secondary">@lady08</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2025 Tatiana Roncancio — Bogotá, Colombia</footer>
+
+<script>
+// ── FLOATING BLOBS on Hero ──
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const blobs = [
+    { x:0.72, y:0.18, r:0.32, freq:0.4, phase:0,   c1:'hsla(260,70%,85%,0.9)',  c2:'hsla(210,70%,82%,0.6)',  c3:'hsla(320,60%,88%,0.3)' },
+    { x:0.58, y:0.55, r:0.20, freq:0.3, phase:2.1, c1:'hsla(210,65%,85%,0.75)', c2:'hsla(260,60%,80%,0.5)',  c3:'hsla(180,50%,88%,0.2)' },
+    { x:0.82, y:0.68, r:0.24, freq:0.5, phase:4.2, c1:'hsla(320,60%,87%,0.8)',  c2:'hsla(260,55%,82%,0.5)',  c3:'hsla(210,60%,86%,0.25)' },
+    { x:0.65, y:0.35, r:0.14, freq:0.6, phase:1.0, c1:'hsla(200,65%,88%,0.7)',  c2:'hsla(280,55%,84%,0.4)',  c3:'hsla(340,50%,90%,0.2)' },
+    { x:0.88, y:0.35, r:0.16, freq:0.35,phase:3.3, c1:'hsla(280,65%,85%,0.65)', c2:'hsla(220,60%,82%,0.4)',  c3:'hsla(300,50%,88%,0.2)' },
+  ];
+
+  function drawBlob(b, t) {
+    const x = (b.x + Math.sin(t * b.freq + b.phase) * 0.12) * W;
+    const y = (b.y + Math.cos(t * b.freq * 0.8 + b.phase) * 0.10) * H;
+    const r = b.r * Math.min(W, H) * (1 + Math.sin(t * b.freq * 1.3 + b.phase) * 0.06);
+
+    // Body
+    const g = ctx.createRadialGradient(x - r*0.25, y - r*0.25, r*0.02, x, y, r);
+    g.addColorStop(0, b.c1);
+    g.addColorStop(0.5, b.c2);
+    g.addColorStop(1, b.c3);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = g;
+    ctx.fill();
+
+    // Specular shine
+    const shine = ctx.createRadialGradient(x - r*0.3, y - r*0.32, 0, x - r*0.1, y - r*0.1, r*0.55);
+    shine.addColorStop(0, 'rgba(255,255,255,0.6)');
+    shine.addColorStop(0.4,'rgba(255,255,255,0.15)');
+    shine.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = shine;
+    ctx.fill();
+  }
+
+  function draw() {
+    t += 0.012;
+    ctx.clearRect(0, 0, W, H);
+    ctx.filter = 'blur(8px)';
+    blobs.forEach(b => drawBlob(b, t));
+    ctx.filter = 'none';
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── ABOUT background blobs (static canvas, softer) ──
+(function() {
+  const canvas = document.getElementById('aboutCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const blobs = [
+    { x: 0.1, y: 0.2, r: 0.35, c1: 'hsla(260,70%,80%,0.5)', c2: 'hsla(210,70%,80%,0.3)', freq: 0.4, phase: 0 },
+    { x: 0.85, y: 0.75, r: 0.3, c1: 'hsla(320,65%,82%,0.45)', c2: 'hsla(260,65%,82%,0.25)', freq: 0.3, phase: 2 },
+    { x: 0.5, y: 0.5, r: 0.2, c1: 'hsla(200,60%,85%,0.35)', c2: 'hsla(280,60%,85%,0.15)', freq: 0.5, phase: 4 },
+  ];
+
+  function draw() {
+    t += 0.005;
+    ctx.clearRect(0, 0, W, H);
+    blobs.forEach(b => {
+      const x = (b.x + Math.sin(t * b.freq + b.phase) * 0.04) * W;
+      const y = (b.y + Math.cos(t * b.freq * 0.8 + b.phase) * 0.04) * H;
+      const r = b.r * Math.min(W, H) * (1 + Math.sin(t * b.freq * 1.2 + b.phase) * 0.05);
+      const g = ctx.createRadialGradient(x - r*0.2, y - r*0.2, r*0.05, x, y, r);
+      g.addColorStop(0, b.c1);
+      g.addColorStop(1, b.c2);
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.filter = 'blur(50px)';
+      ctx.fill();
+      ctx.filter = 'none';
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
